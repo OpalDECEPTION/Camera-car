@@ -1,4 +1,3 @@
-
 #include <RH_RF69.h>
 
 #define RF69_FREQ 915.0
