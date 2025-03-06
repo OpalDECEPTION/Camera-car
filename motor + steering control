@@ -4,11 +4,11 @@ from time import sleep
 
 in1 = 24
 in2 = 23
-en = 12
+en = 13
 temp1=1
 
 
-servo = AngularServo(26, min_angle=-90, max_angle=90)
+servo = AngularServo(12, min_angle=-90, max_angle=90)
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(in1,GPIO.OUT)
