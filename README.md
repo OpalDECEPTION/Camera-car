@@ -1,1 +1,1 @@
-This is the project I have worked on for most of my Junior year at Medford high school and it's purpos is to create a remote control car that works remotely over a web server and video feed using a Raspberry pi.
+This is the project I have worked on for most of my Junior year at Medford High School. Its purpose is to create a remote-controlled car that works remotely over a web server and video feed using a Raspberry Pi.
