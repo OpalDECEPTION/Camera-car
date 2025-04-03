@@ -1,4 +1,4 @@
-  GNU nano 7.2                                                                                                     joystick.py                                                                                                               import pygame
+import pygame
 from pygame.locals import *
 import time
 import RPi.GPIO as GPIO
