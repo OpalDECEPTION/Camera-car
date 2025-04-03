@@ -1,0 +1,84 @@
+  GNU nano 7.2                                                                                                     joystick.py                                                                                                               import pygame
+from pygame.locals import *
+import time
+import RPi.GPIO as GPIO
+from smbus2 import SMBus
+
+addr = 0x8 # bus address
+bus = SMBus(1) # indicates /dev/ic2-1
+in1 = 24
+in2 = 23
+en = 13
+
+# Initialize the joysticks.
+pygame.init()
+joystick_count = pygame.joystick.get_count()
+
+
+
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(in1,GPIO.OUT)
+GPIO.setup(in2,GPIO.OUT)
+GPIO.setup(en,GPIO.OUT)
+GPIO.output(in1,GPIO.LOW)
+GPIO.output(in2,GPIO.LOW)
+p=GPIO.PWM(en,1000)
+p.start(25)
+
+for i in range(joystick_count):
+    joystick = pygame.joystick.Joystick(i)
+    joystick.init()
+    print(f"Joystick {i} name: {joystick.get_name()}")
+    print(f"Number of axes: {joystick.get_numaxes()}")
+    print(f"Number of buttons: {joystick.get_numbuttons()}")
+    print(f"Number of hats: {joystick.get_numhats()}")
+
+running = True
+while running:
+
+    xJoy = joystick.get_axis(2)
+    yJoy = joystick.get_axis(3)
+
+    xJoy = xJoy * 5 + 5
+    yJoy = yJoy * -5 + 5
+#    print(f"yJoy1: {yJoy}")
+    yJoy = yJoy * 15
+
+    yJoy = int(yJoy)
+    xJoy = int(xJoy)
+
+    #print(f"xjoy: {xJoy}, yjoy: {yJoy}")
+    #print(" ")
+
+    if (yJoy > 85):
+        GPIO.output(in2,GPIO.HIGH)
+        GPIO.output(in1,GPIO.LOW)
+        yJoy = yJoy - 85
+        if (yJoy > 50):
+            yJoy = 50
+        p.ChangeDutyCycle(yJoy*2)
+    elif (yJoy < 65):
+        GPIO.output(in2,GPIO.LOW)
+        GPIO.output(in1,GPIO.HIGH)
+        yJoy = yJoy - 65
+        yJoy = yJoy * -2
+        if (yJoy > 100):
+            yJoy = 100
+        p.ChangeDutyCycle(yJoy)
+    else :
+        GPIO.output(in2,GPIO.LOW)
+        GPIO.output(in1,GPIO.LOW)
+
+
+    xJoy = xJoy + 48
+
+    bus.write_byte(addr, xJoy)
+
+
+    time.sleep(0.05)
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+
+pygame.quit()
