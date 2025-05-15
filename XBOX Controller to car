@@ -9,6 +9,7 @@ bus = SMBus(1) # indicates /dev/ic2-1
 in1 = 24
 in2 = 23
 en = 13
+Off = 0
 
 # Initialize the joysticks.
 pygame.init()
@@ -38,7 +39,7 @@ while running:
 
     xJoy = joystick.get_axis(2)
     yJoy = joystick.get_axis(3)
-
+#    print("yjoy =", yJoy)
     xJoy = xJoy * 5 + 5
     yJoy = yJoy * -5 + 5
 #    print(f"yJoy1: {yJoy}")
@@ -46,16 +47,14 @@ while running:
 
     yJoy = int(yJoy)
     xJoy = int(xJoy)
-
-    #print(f"xjoy: {xJoy}, yjoy: {yJoy}")
-    #print(" ")
-
+    
     if (yJoy > 85):
         GPIO.output(in2,GPIO.HIGH)
         GPIO.output(in1,GPIO.LOW)
         yJoy = yJoy - 85
         if (yJoy > 50):
             yJoy = 50
+#        print(yJoy*2)
         p.ChangeDutyCycle(yJoy*2)
     elif (yJoy < 65):
         GPIO.output(in2,GPIO.LOW)
@@ -68,12 +67,11 @@ while running:
     else :
         GPIO.output(in2,GPIO.LOW)
         GPIO.output(in1,GPIO.LOW)
-
+        p.ChangeDutyCycle(Off)
 
     xJoy = xJoy + 48
 
     bus.write_byte(addr, xJoy)
-
 
     time.sleep(0.05)
 
